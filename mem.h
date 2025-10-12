@@ -20,7 +20,7 @@ void *Mem_resize (void *ptr, long nbytes, const char *file, int line);
 #define RESIZE(ptr, nbytes)                                                   \
   ((ptr) = Mem_resize ((ptr), (nbytes), __FILE__, __LINE__));
 
-#define NEW(type) ((type *)MALLOC (sizeof (type)))
+#define NEW(type) ((type *)ALLOC (sizeof (type)))
 
 #define NEW0(type) ((type *)CALLOC (1, sizeof (type)))
 
