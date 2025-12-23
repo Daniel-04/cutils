@@ -12,8 +12,8 @@ typedef struct Bitset
 } Bitset;
 
 static inline Bitset *B_create (size_t nbits);
-static inline void B_set (Bitset *b, size_t bit, int val);
-static inline int B_get (Bitset *b, size_t bit);
+static inline void B_set (Bitset *b, size_t bit, u32 val);
+static inline u32 B_get (Bitset *b, size_t bit);
 static inline void B_free (Bitset *b);
 
 #define UCHAR_BITS 8
@@ -31,7 +31,7 @@ B_create (size_t nbits)
 }
 
 static inline void
-B_set (Bitset *b, size_t bit, int val)
+B_set (Bitset *b, size_t bit, u32 val)
 {
   size_t idx = bit / UCHAR_BITS;
   size_t offset = bit % UCHAR_BITS;
@@ -43,7 +43,7 @@ B_set (Bitset *b, size_t bit, int val)
     b->buf[idx] &= ~(1U << offset);
 }
 
-static inline int
+static inline u32
 B_get (Bitset *b, size_t bit)
 {
   size_t idx = bit / UCHAR_BITS;

@@ -1,17 +1,18 @@
 #ifndef MEM_H_
 #define MEM_H_
 
+#include "defs.h"
 #include "error.h"
 #include <stdlib.h>
 
 static const Except_T Mem_Failed = { "Memory allocation failed" };
 
-static inline void *Mem_alloc (long nbytes, const char *file, int line);
-static inline void *Mem_calloc (long count, long nbytes, const char *file,
-                                int line);
-static inline void Mem_free (void **ptr, const char *file, int line);
-static inline void *Mem_resize (void *ptr, long nbytes, const char *file,
-                                int line);
+static inline void *Mem_alloc (size_t nbytes, const char *file, u32 line);
+static inline void *Mem_calloc (size_t count, size_t nbytes, const char *file,
+                                u32 line);
+static inline void Mem_free (void **ptr, const char *file, u32 line);
+static inline void *Mem_resize (void *ptr, size_t nbytes, const char *file,
+                                u32 line);
 
 #define ALLOC(nbytes) Mem_alloc ((nbytes), __FILE__, __LINE__)
 
@@ -32,7 +33,7 @@ static inline void *Mem_resize (void *ptr, long nbytes, const char *file,
 #define INIT0(p) ((p) = CALLOC (1, sizeof (*p)))
 
 static inline void *
-Mem_alloc (long nbytes, const char *file, int line)
+Mem_alloc (size_t nbytes, const char *file, u32 line)
 {
   void *ptr;
 
@@ -50,7 +51,7 @@ Mem_alloc (long nbytes, const char *file, int line)
 }
 
 static inline void *
-Mem_calloc (long count, long nbytes, const char *file, int line)
+Mem_calloc (size_t count, size_t nbytes, const char *file, u32 line)
 {
   void *ptr;
 
@@ -69,7 +70,7 @@ Mem_calloc (long count, long nbytes, const char *file, int line)
 }
 
 static inline void
-Mem_free (void **ptr, const char *file, int line)
+Mem_free (void **ptr, const char *file, u32 line)
 {
   if (*ptr)
     free (*ptr);
@@ -77,7 +78,7 @@ Mem_free (void **ptr, const char *file, int line)
 }
 
 static inline void *
-Mem_resize (void *ptr, long nbytes, const char *file, int line)
+Mem_resize (void *ptr, size_t nbytes, const char *file, u32 line)
 {
   assert (ptr);
   assert (nbytes > 0);

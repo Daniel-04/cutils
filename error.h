@@ -1,6 +1,7 @@
 #ifndef ERROR_H_
 #define ERROR_H_
 
+#include "defs.h"
 #include <setjmp.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -25,7 +26,7 @@ enum
 
 extern Except_Frame *Except_stack;
 
-void Except_raise (const Except_T *e, const char *file, int line);
+void Except_raise (const Except_T *e, const char *file, u32 line);
 
 #ifndef assert
 #ifdef NDEBUG
@@ -33,8 +34,8 @@ void Except_raise (const Except_T *e, const char *file, int line);
 #else
 #define assert(e)                                                             \
   ((void)((e)                                                                 \
-          || (fprintf (stderr, "%s:%d: Assertion failed: %s\n", __FILE__,     \
-                       (int)__LINE__, #e),                                    \
+          || (fprintf (stderr, "%s:%u: Assertion failed: %s\n", __FILE__,     \
+                       (u32)__LINE__, #e),                                    \
               abort (), 0)))
 #endif
 #endif
@@ -44,7 +45,7 @@ void Except_raise (const Except_T *e, const char *file, int line);
 #define TRY                                                                   \
   do                                                                          \
     {                                                                         \
-      volatile int Except_flag;                                               \
+      volatile u32 Except_flag;                                               \
       Except_Frame Except_frame;                                              \
       Except_stack = &Except_frame;                                           \
       Except_flag = setjmp (Except_frame.env);                                \
