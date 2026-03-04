@@ -5,8 +5,6 @@
 #include "error.h"
 #include <stdlib.h>
 
-static const Except_T Mem_Failed = { "Memory allocation failed" };
-
 static inline void *Mem_alloc (size_t nbytes, const char *file, u32 line);
 static inline void *Mem_calloc (size_t count, size_t nbytes, const char *file,
                                 u32 line);
@@ -22,7 +20,7 @@ static inline void *Mem_resize (void *ptr, size_t nbytes, const char *file,
 #define FREE(ptr) Mem_free ((void **)&(ptr), __FILE__, __LINE__)
 
 #define RESIZE(ptr, nbytes)                                                   \
-  ((ptr) = Mem_resize ((ptr), (nbytes), __FILE__, __LINE__));
+  ((ptr) = Mem_resize ((ptr), (nbytes), __FILE__, __LINE__))
 
 #define NEW(type) ((type *)ALLOC (sizeof (type)))
 
@@ -41,10 +39,7 @@ Mem_alloc (size_t nbytes, const char *file, u32 line)
   ptr = malloc (nbytes);
   if (!ptr)
     {
-      if (!file)
-        RAISE (Mem_Failed);
-      else
-        Except_raise (&Mem_Failed, file, line);
+      panic_fl (file, line, "Memory allocation failed");
     }
 
   return ptr;
@@ -60,10 +55,7 @@ Mem_calloc (size_t count, size_t nbytes, const char *file, u32 line)
   ptr = calloc (count, nbytes);
   if (!ptr)
     {
-      if (!file)
-        RAISE (Mem_Failed);
-      else
-        Except_raise (&Mem_Failed, file, line);
+      panic_fl (file, line, "Memory allocation failed");
     }
 
   return ptr;
@@ -82,16 +74,13 @@ Mem_resize (void *ptr, size_t nbytes, const char *file, u32 line)
 {
   assert (ptr);
   assert (nbytes > 0);
-  ptr = realloc (ptr, nbytes);
-  if (!ptr)
+  void *new_ptr = realloc (ptr, nbytes);
+  if (!new_ptr)
     {
-      if (!file)
-        RAISE (Mem_Failed);
-      else
-        Except_raise (&Mem_Failed, file, line);
+      panic_fl (file, line, "Memory allocation failed");
     }
 
-  return ptr;
+  return new_ptr;
 }
 
 #endif // MEM_H_
